@@ -52,14 +52,8 @@
 
 ## 6. GitHub Issues і Pull Request
 
-| GitHub Issue | Зміна | PR / коміт |
-|---|---|---|
-| #1 Налаштувати Maven-проєкт | pom.xml, Wrapper, структура | PR #1 |
-| #2 Налаштувати SpotBugs і JAR | verify + shade | PR #1 |
-| #3 Налаштувати GitHub Actions | ci.yml | PR #2 |
-| #4 Реалізувати читання записів | TaskParser | PR #2 |
-| #5 Сформувати звіт | ReportFormatter | PR #2 |
-| #6 Додати документацію | README, REPORT, javadoc | PR #2 |
+Issues: https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues
+Pull Request: https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/pull/7
 
 ## 7. Приклади роботи
 Вхідні дані — `data/input.csv` (див. README).
