@@ -15,10 +15,10 @@ public class ReportFormatter {
      * @return текст звіту
      */
     public String format(
-            int tasksCount,
-            int totalStock,
-            double totalInventoryValue,
-            Task mostExpensivePart) {
+        int tasksCount,
+        int totalStock,
+        double totalInventoryValue,
+        Task mostExpensivePart) {
 
         String expensivePart;
 
@@ -26,25 +26,25 @@ public class ReportFormatter {
             expensivePart = "Немає даних";
         } else {
             expensivePart = String.format(
-                    Locale.ROOT,
-                    "%s (%.2f)",
-                    mostExpensivePart.name(),
-                    mostExpensivePart.unitPrice()
+                Locale.ROOT,
+                "%s (%.2f)",
+                mostExpensivePart.name(),
+                mostExpensivePart.unitPrice()
             );
         }
 
-        return """
-                ЗВІТ: СКЛАД АВТОЗАПЧАСТИН
-                ----------------------------------------
-                Коректних записів: %d
-                Загальна кількість: %d
-                Вартість запасу: %.2f
-                Найдорожча деталь: %s
-                """.formatted(
-                tasksCount,
-                totalStock,
-                totalInventoryValue,
-                expensivePart
+        return String.format(
+            Locale.ROOT,
+            "ЗВІТ: СКЛАД АВТОЗАПЧАСТИН%n"
+                    + "----------------------------------------%n"
+                    + "Коректних записів: %d%n"
+                    + "Загальна кількість: %d%n"
+                    + "Вартість запасу: %.2f%n"
+                    + "Найдорожча деталь: %s%n",
+            tasksCount,
+            totalStock,
+            totalInventoryValue,
+            expensivePart
         );
     }
 }
