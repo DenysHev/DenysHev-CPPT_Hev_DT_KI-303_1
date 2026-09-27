@@ -12,6 +12,8 @@ public class TaskParser {
 
     private static final int EXPECTED_FIELDS = 5;
 
+    private final List<String> errors = new ArrayList<>();
+
     /**
      * Читає автозапчастини з CSV-файлу.
      *
@@ -28,7 +30,12 @@ public class TaskParser {
 
         List<Task> tasks = new ArrayList<>();
 
-        for (String line : lines) {
+        errors.clear();
+
+        for (int i = 0; i < lines.size(); i++) {
+
+            String line = lines.get(i);
+            int lineNumber = i + 1;
 
             if (line.isBlank()) {
                 continue;
@@ -37,12 +44,22 @@ public class TaskParser {
             String[] fields = line.split(";", -1);
 
             if (fields.length != EXPECTED_FIELDS) {
+                errors.add(
+                        "Рядок " + lineNumber
+                                + ": очікується " + EXPECTED_FIELDS
+                                + " полів, отримано " + fields.length
+                );
                 continue;
             }
 
             if (fields[0].isBlank()
                     || fields[1].isBlank()
                     || fields[4].isBlank()) {
+
+                errors.add(
+                        "Рядок " + lineNumber
+                                + ": обов'язкове поле не може бути порожнім"
+                );
                 continue;
             }
 
@@ -50,7 +67,21 @@ public class TaskParser {
                 int stock = Integer.parseInt(fields[2]);
                 double unitPrice = Double.parseDouble(fields[3]);
 
-                if (stock < 0 || unitPrice < 0) {
+                if (stock < 0) {
+                    errors.add(
+                            "Рядок " + lineNumber
+                                    + ": кількість товару не може бути від'ємною: "
+                                    + stock
+                    );
+                    continue;
+                }
+
+                if (unitPrice < 0) {
+                    errors.add(
+                            "Рядок " + lineNumber
+                                    + ": ціна не може бути від'ємною: "
+                                    + unitPrice
+                    );
                     continue;
                 }
 
@@ -62,11 +93,23 @@ public class TaskParser {
                         fields[4].trim()
                 ));
 
-            } catch (NumberFormatException ignored) {
-                // Некоректний запис пропускається.
+            } catch (NumberFormatException e) {
+                errors.add(
+                        "Рядок " + lineNumber
+                                + ": кількість або ціна мають некоректний числовий формат"
+                );
             }
         }
 
         return tasks;
+    }
+
+    /**
+     * Повертає список помилок під час перевірки вхідних даних.
+     *
+     * @return список помилок
+     */
+    public List<String> getErrors() {
+        return List.copyOf(errors);
     }
 }

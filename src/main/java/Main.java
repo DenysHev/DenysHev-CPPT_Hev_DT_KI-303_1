@@ -51,7 +51,8 @@ public class Main {
                 tasks.size(),
                 metrics.totalStock(tasks),
                 metrics.totalInventoryValue(tasks),
-                metrics.mostExpensivePart(tasks)
+                metrics.mostExpensivePart(tasks),
+                parser.getErrors()
         );
 
         System.out.print(report);
