@@ -6,6 +6,8 @@ import java.util.Locale;
  */
 public class ReportFormatter {
 
+    private static final String NL = System.lineSeparator();
+
     /**
      * Формує звіт.
      *
@@ -52,21 +54,20 @@ public class ReportFormatter {
                 expensivePart
         ));
 
-        report.append("\n----------------------------------------\n");
-        report.append("ПЕРЕВІРКА ВХІДНИХ ДАНИХ\n");
-        report.append("----------------------------------------\n");
+        report.append(NL);
+        report.append("----------------------------------------").append(NL);
+        report.append("ПЕРЕВІРКА ВХІДНИХ ДАНИХ").append(NL);
+        report.append("----------------------------------------").append(NL);
 
         if (errors.isEmpty()) {
-            report.append("Помилок не виявлено.\n");
+            report.append("Помилок не виявлено.").append(NL);
         } else {
             report.append("Виявлено помилок: ")
                     .append(errors.size())
-                    .append("\n");
+                    .append(NL);
 
             for (String error : errors) {
-                report.append("- ")
-                        .append(error)
-                        .append("\n");
+                report.append("- ").append(error).append(NL);
             }
         }
 

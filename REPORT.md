@@ -37,17 +37,20 @@
 - `TaskParser.java` — читання та перевірка рядків
 - `TaskMetrics.java` — обчислення показників
 - `ReportFormatter.java` — форматування звіту
-- `FileReport.java` — кросплатформне читання й запис файлів
-- `TaskParserTest.java`, `TaskMetricsTest.java` — тести
+- `TaskParserTest.java`, `TaskMetricsTest.java`, `ReportFormatter.java` — тести
 
-Потік даних: файл → `FileReport.readLines` → `TaskParser.parseAll` → `TaskMetrics.compute` → `ReportFormatter.format` → консоль і файл.
+Потік даних: CSV
+→ TaskParser.readTasks(Path)
+→ TaskMetrics.totalStock / totalInventoryValue / mostExpensivePart
+→ ReportFormatter.format(...)
+→ System.out + Main.writeReport(...)
 
 ## 5. Інфраструктура
 - **Maven** — `pom.xml` із координатами `ua.lpnu.kzp:cppt-labs:1.0.0`
 - **Залежності** — JUnit 5 (`junit-jupiter:5.12.2`, scope=test)
 - **Java** — release 21, кодування UTF-8
 - **SpotBugs** — прив'язаний до фази `verify`
-- **maven-shade-plugin** — створює executable JAR з `mainClass=ua.lpnu.kzp.Main`
+- **maven-shade-plugin** — створює executable JAR з `mainClass=Main`
 - **Maven Wrapper** — `mvnw` / `mvnw.cmd` для відтворюваної збірки
 
 ## 6. GitHub Issues і Pull Request
@@ -85,16 +88,16 @@ Pull Request: https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/pull/7
 - SpotBugs — 0 помилок;
 - JAR успішно створено.
 
-CI (GitHub Actions) запускається на ubuntu-latest, windows-latest, macos-latest. Посилання на успішний run: `<URL до run>`.
+CI (GitHub Actions) запускається на ubuntu-latest, windows-latest, macos-latest. Посилання на успішний run: `https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/36326647098`.
+Artifact: `https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/36326647098/artifacts/10933952848`
 
 ## 9. Документація
 Javadoc додано до:
 - `Main.main`
-- `TaskParser.parseLine`, `TaskParser.parseAll`
-- `TaskMetrics.compute`
+- `TaskParser.readTasks`, `TaskParser.getErrors`
+- `TaskMetrics.totalStock`, `TaskMetrics.totalInventoryValue`, `TaskMetrics.mostExpensivePart`
 - `ReportFormatter.format`
-- `FileReport.readLines`, `FileReport.writeReport`
-- класу `Task` (усі компоненти)
+- класу `Task` (компоненти record)
 
 ## 10. Академічна доброчесність
 **Інструмент ШІ:** GitHub Copilot (VS Code).

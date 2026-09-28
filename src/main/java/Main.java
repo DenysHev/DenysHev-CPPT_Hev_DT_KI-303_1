@@ -5,88 +5,117 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * Головний клас програми для обробки даних складу автозапчастин.
+ * Головний клас програми.
+ *
+ * <p>Консольна програма для обробки даних складу автозапчастин.</p>
  */
-public class Main {
+public final class Main {
 
     private static final String VERSION = "1.0.0";
 
-    public static void main(String[] args) throws Exception {
-
-        if (args.length > 0 && args[0].equals("--help")) {
-            printHelp();
-            return;
-        }
-
-        if (args.length > 0 && args[0].equals("--version")) {
-            System.out.println(VERSION);
-            return;
-        }
-
-        Path inputPath = Path.of("data/input.csv");
-        Path outputPath = Path.of("out/report.txt");
-
-        if (args.length >= 2 && args[0].equals("--input")) {
-            inputPath = Path.of(args[1]);
-        }
-
-        if (args.length >= 2 && args[0].equals("--output")) {
-            outputPath = Path.of(args[1]);
-        }
-
-        if (args.length >= 4
-                && args[0].equals("--input")
-                && args[2].equals("--output")) {
-            inputPath = Path.of(args[1]);
-            outputPath = Path.of(args[3]);
-        }
-
-        TaskParser parser = new TaskParser();
-        TaskMetrics metrics = new TaskMetrics();
-        ReportFormatter formatter = new ReportFormatter();
-
-        List<Task> tasks = parser.readTasks(inputPath);
-
-        String report = formatter.format(
-                tasks.size(),
-                metrics.totalStock(tasks),
-                metrics.totalInventoryValue(tasks),
-                metrics.mostExpensivePart(tasks),
-                parser.getErrors()
-        );
-
-        System.out.print(report);
-
-        writeReport(outputPath, report);
+    private Main() {
     }
 
-    private static void writeReport(Path outputPath, String report)
-            throws IOException {
+    /**
+     * Точка входу в програму.
+     *
+     * @param args аргументи командного рядка
+     */
+    public static void main(String[] args) {
+        Path input = Path.of("data", "input.csv");
+        Path output = Path.of("out", "report.txt");
 
-        Path parent = outputPath.getParent();
+        for (int i = 0; i < args.length; i++) {
+            switch (args[i]) {
+                case "--help" -> {
+                    printHelp();
+                    return;
+                }
 
-        if (parent != null) {
-            Files.createDirectories(parent);
+                case "--version" -> {
+                    System.out.println(VERSION);
+                    return;
+                }
+
+                case "--input" -> {
+                    if (i + 1 >= args.length) {
+                        System.out.println(
+                                "Помилка: після --input потрібно вказати шлях."
+                        );
+                        return;
+                    }
+                    input = Path.of(args[++i]);
+                }
+
+                case "--output" -> {
+                    if (i + 1 >= args.length) {
+                        System.out.println(
+                                "Помилка: після --output потрібно вказати шлях."
+                        );
+                        return;
+                    }
+                    output = Path.of(args[++i]);
+                }
+
+                default -> {
+                    System.out.println("Невідомий аргумент: " + args[i]);
+                    System.out.println("Використайте --help.");
+                    return;
+                }
+            }
         }
 
-        Files.writeString(
-                outputPath,
-                report,
-                StandardCharsets.UTF_8
-        );
+        try {
+            TaskParser parser = new TaskParser();
+            TaskMetrics metrics = new TaskMetrics();
+            ReportFormatter formatter = new ReportFormatter();
+
+            List<Task> tasks = parser.readTasks(input);
+
+            String report = formatter.format(
+                    tasks.size(),
+                    metrics.totalStock(tasks),
+                    metrics.totalInventoryValue(tasks),
+                    metrics.mostExpensivePart(tasks),
+                    parser.getErrors()
+            );
+
+            System.out.println(report);
+
+            Path outputParent = output.getParent();
+
+            if (outputParent != null) {
+                Files.createDirectories(outputParent);
+            }
+
+            Files.writeString(
+                    output,
+                    report,
+                    StandardCharsets.UTF_8
+            );
+
+            System.out.println("Звіт записано у: " + output);
+
+        } catch (IOException exception) {
+            System.out.println(
+                    "Помилка роботи з файлом: " + exception.getMessage()
+            );
+        }
     }
 
+    /**
+     * Виводить довідку щодо використання програми.
+     */
     private static void printHelp() {
+        System.out.println("""
+                Використання:
+                java -jar cppt-labs.jar [--help] [--version]
+                    [--input <файл>] [--output <файл>]
 
-        System.out.println("Використання:");
-        System.out.println(
-                "  java -jar cppt-labs.jar [--input FILE] [--output FILE]"
-        );
-        System.out.println();
-        System.out.println("Опції:");
-        System.out.println("  --help              показати довідку");
-        System.out.println("  --input FILE        шлях до вхідного CSV-файлу");
-        System.out.println("  --output FILE       шлях до файлу звіту");
-        System.out.println("  --version           показати версію програми");
+                --help              показати довідку
+                --version           показати версію програми
+                --input <файл>      шлях до вхідного CSV-файлу
+                --output <файл>     шлях до файлу звіту
+                """);
     }
 }

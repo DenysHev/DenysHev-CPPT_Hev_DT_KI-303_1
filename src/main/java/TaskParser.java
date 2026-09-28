@@ -76,6 +76,16 @@ public class TaskParser {
                     continue;
                 }
 
+                // NEW: відхиляємо NaN, +Infinity, -Infinity
+                if (!Double.isFinite(unitPrice)) {
+                    errors.add(
+                            "Рядок " + lineNumber
+                                    + ": ціна має бути скінченним числом: "
+                                    + fields[3]
+                    );
+                    continue;
+                }
+
                 if (unitPrice < 0) {
                     errors.add(
                             "Рядок " + lineNumber
