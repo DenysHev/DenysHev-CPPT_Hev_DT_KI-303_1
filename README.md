@@ -58,19 +58,19 @@ Windows:
 
 Запуск:
 
-    java -jar target/lab01.jar --input data/input.csv
+    java -jar target/cppt-labs.jar --input data/input.csv
 
 Запис звіту у файл:
 
-    java -jar target/lab01.jar --input data/input.csv --output out/report.txt
+    java -jar target/cppt-labs.jar --input data/input.csv --output out/report.txt
 
 Довідка:
 
-    java -jar target/lab01.jar --help
+    java -jar target/cppt-labs.jar --help
 
 Версія:
 
-    java -jar target/lab01.jar --version
+    java -jar target/cppt-labs.jar --version
 
 ## Параметри командного рядка
 - `--help` — показати довідку
