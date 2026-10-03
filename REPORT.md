@@ -64,7 +64,7 @@
 - Формат CSV, предметні показники та зовнішній звіт не змінювалися.
 
 ## 5. Інфраструктура
-- **Maven** — `pom.xml` із координатами `ua.lpnu.kzp:cppt-labs:1.0.0`
+- **Maven** — `pom.xml` із координатами `ua.lpnu.kzp:cppt-labs:2.0.0`
 - **Залежності** — JUnit 5 (`junit-jupiter:5.12.2`, scope=test)
 - **Java** — release 21, кодування UTF-8
 - **SpotBugs** — прив'язаний до фази `verify`
@@ -104,10 +104,20 @@ Pull Request: https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/pull/7
 Результати:
 - усі JUnit-тести пройшли;
 - SpotBugs — 0 помилок;
-- JAR успішно створено.
+- JAR успішно створено;
+- версія продукту — `2.0.0`, Git-тег — `v2.0.0`.
 
-CI (GitHub Actions) запускається на ubuntu-latest, windows-latest, macos-latest. Посилання на успішний run: `https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/36326647098`.
-Artifact: `https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/36326647098/artifacts/10933952848`
+CI (GitHub Actions) запускається на `ubuntu-latest`, `windows-latest`,
+`macos-latest`. Зелений CI для Lab 02:
+`https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/37122626950`.
+
+Опубліковані JAR-артефакти:
+- Ubuntu:
+  `https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/37122626950/artifacts/11273632204`
+- macOS:
+  `https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/37122626950/artifacts/11273756851`
+- Windows:
+  `https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/37122626950/artifacts/11273981861`
 
 ## 9. Документація
 Javadoc додано до:
@@ -153,4 +163,9 @@ Javadoc додано до:
 У лабораторній роботі №2 предметну модель перебудовано без зміни зовнішньої
 поведінки програми: запис автозапчастини представлено незмінною сутністю
 `AutoPart`, CSV-створення винесено у `fromCsv`, а підсумкові показники об'єднано
-в `InventoryMetrics`. Усі 36 JUnit-тестів і SpotBugs успішно проходять.
+в `InventoryMetrics`. До перебудови використовувалися `Task` як record,
+зовнішній розбір і валідація виконувалися в `TaskParser`, а показники
+поверталися окремими методами. Після перебудови `AutoPart` інкапсулює стан і
+перевіряє інваріанти під час створення, `fromCsv` створює сутність із CSV,
+`InventoryMetrics` об'єднує результати, а зовнішній CSV та звіт не змінилися.
+Усі 37 JUnit-тестів і SpotBugs успішно проходять.
