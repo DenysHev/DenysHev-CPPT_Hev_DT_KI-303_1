@@ -11,18 +11,18 @@ public class TaskMetrics {
      * @param tasks список автозапчастин
      * @return набір показників
      */
-    public InventoryMetrics calculate(List<AutoPart> tasks) {
+    public StockValue calculate(List<SparePart> tasks) {
         int totalStock = tasks.stream()
-                .mapToInt(AutoPart::stock)
+                .mapToInt(SparePart::stock)
                 .sum();
         double totalInventoryValue = tasks.stream()
                 .mapToDouble(task -> task.stock() * task.unitPrice())
                 .sum();
-        AutoPart mostExpensivePart = tasks.stream()
-                .max(java.util.Comparator.comparingDouble(AutoPart::unitPrice))
+        SparePart mostExpensivePart = tasks.stream()
+                .max(java.util.Comparator.comparingDouble(SparePart::unitPrice))
                 .orElse(null);
 
-        return new InventoryMetrics(
+        return new StockValue(
                 tasks.size(),
                 totalStock,
                 totalInventoryValue,

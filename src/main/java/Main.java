@@ -70,8 +70,8 @@ public final class Main {
             TaskMetrics metrics = new TaskMetrics();
             ReportFormatter formatter = new ReportFormatter();
 
-            List<AutoPart> tasks = parser.readTasks(input);
-            InventoryMetrics inventoryMetrics = metrics.calculate(tasks);
+            List<SparePart> tasks = parser.readTasks(input);
+            StockValue inventoryMetrics = metrics.calculate(tasks);
 
             String report = formatter.format(
                     inventoryMetrics.validRecords(),

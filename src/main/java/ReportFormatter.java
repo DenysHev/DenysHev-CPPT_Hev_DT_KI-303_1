@@ -22,7 +22,7 @@ public class ReportFormatter {
             int tasksCount,
             int totalStock,
             double totalInventoryValue,
-            AutoPart mostExpensivePart,
+            SparePart mostExpensivePart,
             List<String> errors) {
 
         String expensivePart;
