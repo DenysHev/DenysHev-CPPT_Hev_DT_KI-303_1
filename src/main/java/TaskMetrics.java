@@ -1,4 +1,3 @@
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -7,38 +6,27 @@ import java.util.List;
 public class TaskMetrics {
 
     /**
-     * Обчислює загальну кількість деталей.
+     * Обчислює показники складу.
      *
      * @param tasks список автозапчастин
-     * @return загальна кількість
+     * @return набір показників
      */
-    public int totalStock(List<Task> tasks) {
-        return tasks.stream()
-                .mapToInt(Task::stock)
+    public InventoryMetrics calculate(List<AutoPart> tasks) {
+        int totalStock = tasks.stream()
+                .mapToInt(AutoPart::stock)
                 .sum();
-    }
-
-    /**
-     * Обчислює загальну вартість запасів.
-     *
-     * @param tasks список автозапчастин
-     * @return загальна вартість
-     */
-    public double totalInventoryValue(List<Task> tasks) {
-        return tasks.stream()
+        double totalInventoryValue = tasks.stream()
                 .mapToDouble(task -> task.stock() * task.unitPrice())
                 .sum();
-    }
-
-    /**
-     * Знаходить найдорожчу деталь.
-     *
-     * @param tasks список автозапчастин
-     * @return найдорожча деталь або null
-     */
-    public Task mostExpensivePart(List<Task> tasks) {
-        return tasks.stream()
-                .max(Comparator.comparingDouble(Task::unitPrice))
+        AutoPart mostExpensivePart = tasks.stream()
+                .max(java.util.Comparator.comparingDouble(AutoPart::unitPrice))
                 .orElse(null);
+
+        return new InventoryMetrics(
+                tasks.size(),
+                totalStock,
+                totalInventoryValue,
+                mostExpensivePart
+        );
     }
 }

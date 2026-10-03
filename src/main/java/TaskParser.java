@@ -10,8 +10,6 @@ import java.util.List;
  */
 public class TaskParser {
 
-    private static final int EXPECTED_FIELDS = 5;
-
     private final List<String> errors = new ArrayList<>();
 
     /**
@@ -21,14 +19,14 @@ public class TaskParser {
      * @return список коректних записів
      * @throws IOException якщо файл неможливо прочитати
      */
-    public List<Task> readTasks(Path inputPath) throws IOException {
+    public List<AutoPart> readTasks(Path inputPath) throws IOException {
 
         List<String> lines = Files.readAllLines(
                 inputPath,
                 StandardCharsets.UTF_8
         );
 
-        List<Task> tasks = new ArrayList<>();
+        List<AutoPart> tasks = new ArrayList<>();
 
         errors.clear();
 
@@ -41,72 +39,11 @@ public class TaskParser {
                 continue;
             }
 
-            String[] fields = line.split(";", -1);
-
-            if (fields.length != EXPECTED_FIELDS) {
-                errors.add(
-                        "Рядок " + lineNumber
-                                + ": очікується " + EXPECTED_FIELDS
-                                + " полів, отримано " + fields.length
-                );
-                continue;
-            }
-
-            if (fields[0].isBlank()
-                    || fields[1].isBlank()
-                    || fields[4].isBlank()) {
-
-                errors.add(
-                        "Рядок " + lineNumber
-                                + ": обов'язкове поле не може бути порожнім"
-                );
-                continue;
-            }
-
             try {
-                int stock = Integer.parseInt(fields[2]);
-                double unitPrice = Double.parseDouble(fields[3]);
-
-                if (stock < 0) {
-                    errors.add(
-                            "Рядок " + lineNumber
-                                    + ": кількість товару не може бути від'ємною: "
-                                    + stock
-                    );
-                    continue;
-                }
-
-                // NEW: відхиляємо NaN, +Infinity, -Infinity
-                if (!Double.isFinite(unitPrice)) {
-                    errors.add(
-                            "Рядок " + lineNumber
-                                    + ": ціна має бути скінченним числом: "
-                                    + fields[3]
-                    );
-                    continue;
-                }
-
-                if (unitPrice < 0) {
-                    errors.add(
-                            "Рядок " + lineNumber
-                                    + ": ціна не може бути від'ємною: "
-                                    + unitPrice
-                    );
-                    continue;
-                }
-
-                tasks.add(new Task(
-                        fields[0].trim(),
-                        fields[1].trim(),
-                        stock,
-                        unitPrice,
-                        fields[4].trim()
-                ));
-
-            } catch (NumberFormatException e) {
+                tasks.add(AutoPart.fromCsv(line));
+            } catch (IllegalArgumentException exception) {
                 errors.add(
-                        "Рядок " + lineNumber
-                                + ": кількість або ціна мають некоректний числовий формат"
+                        "Рядок " + lineNumber + ": " + exception.getMessage()
                 );
             }
         }

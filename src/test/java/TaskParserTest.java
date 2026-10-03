@@ -29,7 +29,7 @@ class TaskParserTest {
                 SKU002;Фільтр;20;320.00;Mann
                 """);
 
-        List<Task> tasks = new TaskParser().readTasks(file);
+        List<AutoPart> tasks = new TaskParser().readTasks(file);
 
         assertEquals(2, tasks.size());
         assertEquals("Колодки", tasks.get(0).name());
@@ -57,7 +57,7 @@ class TaskParserTest {
         Path file = writeCsv(line + "\n");
         TaskParser parser = new TaskParser();
 
-        List<Task> tasks = parser.readTasks(file);
+        List<AutoPart> tasks = parser.readTasks(file);
 
         assertEquals(expectedValid, tasks.size(),
         "Невірна кількість валідних записів для: " + line);
@@ -72,7 +72,7 @@ class TaskParserTest {
     void emptyAndBlankLinesAreIgnored() throws IOException {
         Path file = writeCsv("\n   \nSKU001;Колодки;10;100.00;Bosch\n\n");
 
-        List<Task> tasks = new TaskParser().readTasks(file);
+        List<AutoPart> tasks = new TaskParser().readTasks(file);
 
         assertEquals(1, tasks.size());
     }
@@ -86,7 +86,7 @@ class TaskParserTest {
                 """);
 
         TaskParser parser = new TaskParser();
-        List<Task> tasks = parser.readTasks(file);
+        List<AutoPart> tasks = parser.readTasks(file);
 
         assertTrue(tasks.isEmpty());
         assertEquals(3, parser.getErrors().size());
@@ -94,11 +94,10 @@ class TaskParserTest {
 
     @Test
     void emptyFieldInRequiredPositionIsRejected() throws IOException {
-        // 5 полів, але sku порожній
         Path file = writeCsv(";Колодки;10;100.00;Bosch\n");
 
         TaskParser parser = new TaskParser();
-        List<Task> tasks = parser.readTasks(file);
+        List<AutoPart> tasks = parser.readTasks(file);
 
         assertTrue(tasks.isEmpty());
         assertEquals(1, parser.getErrors().size());
