@@ -1,13 +1,16 @@
-# Звіт до лабораторної роботи №1
+# Звіт до лабораторної роботи №2
 
 ## 1. Тема, номер і варіант
-- **Тема:** Розгортання Java-проєкту та базова обробка даних
-- **Номер роботи:** 1
+- **Тема:** Предметна модель складу автозапчастин
+- **Номер роботи:** 2
 - **Варіант:** 4 — Склад автозапчастин
 - **Операційна система:** Windows 11
 
 ## 2. Мета роботи
-Пройти повний шлях від створення репозиторію й налаштування інфраструктури до версії простої консольної програми, яку можна відтворено зібрати й запустити на Windows, macOS та Ubuntu.
+Перебудувати предметну частину продукту з попередньої роботи: замінити
+паралельні значення класом-сутністю з інкапсульованим незмінним станом,
+перенести валідацію до створення сутності та представити підсумкові показники
+через `record`, зберігши зовнішню поведінку програми.
 
 Досягнуті результати:
 - створено публічний GitHub-репозиторій;
@@ -33,20 +36,35 @@
 
 ## 4. Структура програми
 - `Main.java` — точка входу, розбір аргументів
-- `Task.java` — модель одного запису
-- `TaskParser.java` — читання та перевірка рядків
-- `TaskMetrics.java` — обчислення показників
+- `AutoPart.java` — незмінний клас-сутність автозапчастини
+- `InventoryMetrics.java` — record для підсумкових показників
+- `TaskParser.java` — читання файлу та прив'язка помилок до номерів рядків
+- `TaskMetrics.java` — обчислення `InventoryMetrics`
 - `ReportFormatter.java` — форматування звіту
-- `TaskParserTest.java`, `TaskMetricsTest.java`, `ReportFormatter.java` — тести
+- `AutoPartTest.java`, `TaskParserTest.java`, `TaskMetricsTest.java`,
+  `ReportFormatterTest.java` — тести
 
 Потік даних: CSV
-→ TaskParser.readTasks(Path)
-→ TaskMetrics.totalStock / totalInventoryValue / mostExpensivePart
+→ `TaskParser.readTasks(Path)`
+→ `AutoPart.fromCsv(String)`
+→ `TaskMetrics.calculate(List<AutoPart>)`
+→ `InventoryMetrics`
 → ReportFormatter.format(...)
 → System.out + Main.writeReport(...)
 
+### Відмінності від лабораторної роботи №1
+
+- `Task` як record замінено на клас-сутність `AutoPart` із приватними
+  `final` полями та без setter-ів.
+- Перевірка обов'язкових полів, запасу та ціни виконується в конструкторі
+  `AutoPart`.
+- Розбір одного CSV-рядка винесено у фабричний метод `AutoPart.fromCsv`.
+- Окремі результати обчислень об'єднано в незмінний `InventoryMetrics`.
+- Додано `AutoPart.toString()` із форматуванням ціни через `Locale.ROOT`.
+- Формат CSV, предметні показники та зовнішній звіт не змінювалися.
+
 ## 5. Інфраструктура
-- **Maven** — `pom.xml` із координатами `ua.lpnu.kzp:cppt-labs:1.0.0`
+- **Maven** — `pom.xml` із координатами `ua.lpnu.kzp:cppt-labs:2.0.0`
 - **Залежності** — JUnit 5 (`junit-jupiter:5.12.2`, scope=test)
 - **Java** — release 21, кодування UTF-8
 - **SpotBugs** — прив'язаний до фази `verify`
@@ -86,18 +104,29 @@ Pull Request: https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/pull/7
 Результати:
 - усі JUnit-тести пройшли;
 - SpotBugs — 0 помилок;
-- JAR успішно створено.
+- JAR успішно створено;
+- версія продукту — `2.0.0`, Git-тег — `v2.0.0`.
 
-CI (GitHub Actions) запускається на ubuntu-latest, windows-latest, macos-latest. Посилання на успішний run: `https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/36326647098`.
-Artifact: `https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/36326647098/artifacts/10933952848`
+CI (GitHub Actions) запускається на `ubuntu-latest`, `windows-latest`,
+`macos-latest`. Зелений CI для Lab 02:
+`https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/37122626950`.
+
+Опубліковані JAR-артефакти:
+- Ubuntu:
+  `https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/37122626950/artifacts/11273632204`
+- macOS:
+  `https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/37122626950/artifacts/11273756851`
+- Windows:
+  `https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/37122626950/artifacts/11273981861`
 
 ## 9. Документація
 Javadoc додано до:
 - `Main.main`
+- `AutoPart`, його конструктора, `fromCsv` і `toString`
 - `TaskParser.readTasks`, `TaskParser.getErrors`
-- `TaskMetrics.totalStock`, `TaskMetrics.totalInventoryValue`, `TaskMetrics.mostExpensivePart`
+- `TaskMetrics.calculate`
+- `InventoryMetrics`
 - `ReportFormatter.format`
-- класу `Task` (компоненти record)
 
 ## 10. Академічна доброчесність
 **Інструмент ШІ:** GitHub Copilot (VS Code).
@@ -131,4 +160,12 @@ Javadoc додано до:
 ## 12. Висновки
 Створено першу версію консольного продукту для предметної області «Склад автозапчастин». Програма читає CSV, перевіряє записи, обчислює показники, формує звіт у консоль і файл, проходить тести та SpotBugs, збирається Maven Wrapper у executable JAR і перевіряється CI на трьох ОС.
 
-У лабораторній роботі №2 рядкові записи буде замінено власними класами без зміни зовнішньої поведінки програми.
+У лабораторній роботі №2 предметну модель перебудовано без зміни зовнішньої
+поведінки програми: запис автозапчастини представлено незмінною сутністю
+`AutoPart`, CSV-створення винесено у `fromCsv`, а підсумкові показники об'єднано
+в `InventoryMetrics`. До перебудови використовувалися `Task` як record,
+зовнішній розбір і валідація виконувалися в `TaskParser`, а показники
+поверталися окремими методами. Після перебудови `AutoPart` інкапсулює стан і
+перевіряє інваріанти під час створення, `fromCsv` створює сутність із CSV,
+`InventoryMetrics` об'єднує результати, а зовнішній CSV та звіт не змінилися.
+Усі 37 JUnit-тестів і SpotBugs успішно проходять.

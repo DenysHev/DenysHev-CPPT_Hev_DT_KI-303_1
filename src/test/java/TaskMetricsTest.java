@@ -3,6 +3,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import org.junit.jupiter.api.Test;
 
 class TaskMetricsTest {
@@ -11,37 +12,44 @@ class TaskMetricsTest {
 
     @Test
     void emptyListYieldsZeroTotalsAndNull() {
-        assertEquals(0, metrics.totalStock(List.of()));
-        assertEquals(0.0, metrics.totalInventoryValue(List.of()), 0.001);
-        assertNull(metrics.mostExpensivePart(List.of()));
+        InventoryMetrics result = metrics.calculate(List.of());
+
+        assertEquals(0, result.validRecords());
+        assertEquals(0, result.totalStock());
+        assertEquals(0.0, result.totalInventoryValue(), 0.001);
+        assertNull(result.mostExpensivePart());
     }
 
     @Test
     void singleTask() {
-        Task t = new Task("SKU001", "Колодка", 3, 100.00, "Bosch");
-        List<Task> tasks = List.of(t);
+        AutoPart t = new AutoPart("SKU001", "Колодка", 3, 100.00, "Bosch");
+        List<AutoPart> tasks = List.of(t);
 
-        assertEquals(3, metrics.totalStock(tasks));
-        assertEquals(300.00, metrics.totalInventoryValue(tasks), 0.001);
-        assertEquals(t, metrics.mostExpensivePart(tasks));
+        InventoryMetrics result = metrics.calculate(tasks);
+
+        assertEquals(1, result.validRecords());
+        assertEquals(3, result.totalStock());
+        assertEquals(300.00, result.totalInventoryValue(), 0.001);
+        assertEquals(t, result.mostExpensivePart());
     }
 
     @Test
     void shouldCalculateTotalStock() {
-        List<Task> tasks = List.of(
-                new Task("SKU001", "Колодки", 10, 850.50, "Bosch"),
-                new Task("SKU002", "Фільтр", 20, 320.00, "Mann"),
-                new Task("SKU003", "Амортизатор", 5, 2450.00, "Sachs")
+        List<AutoPart> tasks = List.of(
+                new AutoPart("SKU001", "Колодки", 10, 850.50, "Bosch"),
+                new AutoPart("SKU002", "Фільтр", 20, 320.00, "Mann"),
+                new AutoPart("SKU003", "Амортизатор", 5, 2450.00, "Sachs")
         );
-        assertEquals(35, metrics.totalStock(tasks));
+        assertEquals(35, metrics.calculate(tasks).totalStock());
     }
 
     @Test
     void shouldFindMostExpensivePart() {
-        Task cheap = new Task("SKU001", "Колодки", 10, 100.00, "Bosch");
-        Task expensive = new Task("SKU002", "Амортизатор", 5, 2500.00, "Sachs");
+        AutoPart cheap = new AutoPart("SKU001", "Колодки", 10, 100.00, "Bosch");
+        AutoPart expensive = new AutoPart("SKU002", "Амортизатор", 5, 2500.00, "Sachs");
 
-        Task result = metrics.mostExpensivePart(List.of(cheap, expensive));
+        AutoPart result = metrics.calculate(List.of(cheap, expensive))
+                .mostExpensivePart();
 
         assertNotNull(result);
         assertEquals("SKU002", result.sku());
@@ -51,24 +59,47 @@ class TaskMetricsTest {
 
     @Test
     void shouldCalculateTotalInventoryValue() {
-        List<Task> tasks = List.of(
-                new Task("SKU001", "Колодки", 10, 100.00, "Bosch"),
-                new Task("SKU002", "Фільтр", 5, 200.00, "Mann"),
-                new Task("SKU003", "Дорогий", 1, 999.99, "Test")
+        List<AutoPart> tasks = List.of(
+                new AutoPart("SKU001", "Колодки", 10, 100.00, "Bosch"),
+                new AutoPart("SKU002", "Фільтр", 5, 200.00, "Mann"),
+                new AutoPart("SKU003", "Дорогий", 1, 999.99, "Test")
         );
 
-        assertEquals(2999.99, metrics.totalInventoryValue(tasks), 0.001);
+        assertEquals(
+                2999.99,
+                metrics.calculate(tasks).totalInventoryValue(),
+                0.001
+        );
     }
 
     @Test
     void zeroStockAndZeroPriceAreHandled() {
-        List<Task> tasks = List.of(
-                new Task("SKU001", "Без ціни", 0, 0.0, "Test"),
-                new Task("SKU002", "Без залишку", 10, 0.0, "Test")
+        List<AutoPart> tasks = List.of(
+                new AutoPart("SKU001", "Без ціни", 0, 0.0, "Test"),
+                new AutoPart("SKU002", "Без залишку", 10, 0.0, "Test")
         );
 
-        assertEquals(10, metrics.totalStock(tasks));
-        assertEquals(0.0, metrics.totalInventoryValue(tasks), 0.001);
-        assertNotNull(metrics.mostExpensivePart(tasks));
+        InventoryMetrics result = metrics.calculate(tasks);
+
+        assertEquals(2, result.validRecords());
+        assertEquals(10, result.totalStock());
+        assertEquals(0.0, result.totalInventoryValue(), 0.001);
+        assertNotNull(result.mostExpensivePart());
+    }
+
+    @Test
+    void inventoryMetricsRecordExposesImmutableSummary() {
+        AutoPart part = new AutoPart(
+                "SKU001", "Колодка", 3, 100.00, "Bosch"
+        );
+        InventoryMetrics first = new InventoryMetrics(1, 3, 300.00, part);
+        InventoryMetrics second = new InventoryMetrics(1, 3, 300.00, part);
+
+        assertEquals(1, first.validRecords());
+        assertEquals(3, first.totalStock());
+        assertEquals(300.00, first.totalInventoryValue());
+        assertSame(part, first.mostExpensivePart());
+        assertEquals(first, second);
+        assertEquals(first.hashCode(), second.hashCode());
     }
 }
