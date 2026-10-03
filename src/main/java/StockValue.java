@@ -6,10 +6,10 @@
  * @param totalInventoryValue загальна вартість запасів
  * @param mostExpensivePart найдорожча деталь або {@code null}
  */
-public record InventoryMetrics(
+public record StockValue(
         int validRecords,
         int totalStock,
         double totalInventoryValue,
-        AutoPart mostExpensivePart
+        SparePart mostExpensivePart
 ) {
 }

@@ -3,7 +3,7 @@ import java.util.Locale;
 /**
  * Незмінна сутність автозапчастини на складі.
  */
-public final class AutoPart {
+public final class SparePart {
 
     private static final int EXPECTED_CSV_FIELDS = 5;
 
@@ -23,7 +23,7 @@ public final class AutoPart {
      * @param supplier постачальник
      * @throws IllegalArgumentException якщо значення не відповідають правилам домену
      */
-    public AutoPart(
+    public SparePart(
             String sku,
             String name,
             int stock,
@@ -67,7 +67,7 @@ public final class AutoPart {
      * @throws IllegalArgumentException якщо рядок має неправильний формат
      *         або містить недопустимі значення
      */
-    public static AutoPart fromCsv(String csvLine) {
+    public static SparePart fromCsv(String csvLine) {
         if (csvLine == null) {
             throw new IllegalArgumentException("CSV-рядок не може бути null");
         }
@@ -94,7 +94,7 @@ public final class AutoPart {
             );
         }
 
-        return new AutoPart(
+        return new SparePart(
                 fields[0],
                 fields[1],
                 stock,

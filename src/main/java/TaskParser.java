@@ -19,14 +19,14 @@ public class TaskParser {
      * @return список коректних записів
      * @throws IOException якщо файл неможливо прочитати
      */
-    public List<AutoPart> readTasks(Path inputPath) throws IOException {
+    public List<SparePart> readTasks(Path inputPath) throws IOException {
 
         List<String> lines = Files.readAllLines(
                 inputPath,
                 StandardCharsets.UTF_8
         );
 
-        List<AutoPart> tasks = new ArrayList<>();
+        List<SparePart> tasks = new ArrayList<>();
 
         errors.clear();
 
@@ -40,7 +40,7 @@ public class TaskParser {
             }
 
             try {
-                tasks.add(AutoPart.fromCsv(line));
+                tasks.add(SparePart.fromCsv(line));
             } catch (IllegalArgumentException exception) {
                 errors.add(
                         "Рядок " + lineNumber + ": " + exception.getMessage()

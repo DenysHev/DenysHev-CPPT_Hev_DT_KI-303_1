@@ -12,7 +12,7 @@ class TaskMetricsTest {
 
     @Test
     void emptyListYieldsZeroTotalsAndNull() {
-        InventoryMetrics result = metrics.calculate(List.of());
+        StockValue result = metrics.calculate(List.of());
 
         assertEquals(0, result.validRecords());
         assertEquals(0, result.totalStock());
@@ -22,10 +22,10 @@ class TaskMetricsTest {
 
     @Test
     void singleTask() {
-        AutoPart t = new AutoPart("SKU001", "Колодка", 3, 100.00, "Bosch");
-        List<AutoPart> tasks = List.of(t);
+        SparePart t = new SparePart("SKU001", "Колодка", 3, 100.00, "Bosch");
+        List<SparePart> tasks = List.of(t);
 
-        InventoryMetrics result = metrics.calculate(tasks);
+        StockValue result = metrics.calculate(tasks);
 
         assertEquals(1, result.validRecords());
         assertEquals(3, result.totalStock());
@@ -35,20 +35,20 @@ class TaskMetricsTest {
 
     @Test
     void shouldCalculateTotalStock() {
-        List<AutoPart> tasks = List.of(
-                new AutoPart("SKU001", "Колодки", 10, 850.50, "Bosch"),
-                new AutoPart("SKU002", "Фільтр", 20, 320.00, "Mann"),
-                new AutoPart("SKU003", "Амортизатор", 5, 2450.00, "Sachs")
+        List<SparePart> tasks = List.of(
+                new SparePart("SKU001", "Колодки", 10, 850.50, "Bosch"),
+                new SparePart("SKU002", "Фільтр", 20, 320.00, "Mann"),
+                new SparePart("SKU003", "Амортизатор", 5, 2450.00, "Sachs")
         );
         assertEquals(35, metrics.calculate(tasks).totalStock());
     }
 
     @Test
     void shouldFindMostExpensivePart() {
-        AutoPart cheap = new AutoPart("SKU001", "Колодки", 10, 100.00, "Bosch");
-        AutoPart expensive = new AutoPart("SKU002", "Амортизатор", 5, 2500.00, "Sachs");
+        SparePart cheap = new SparePart("SKU001", "Колодки", 10, 100.00, "Bosch");
+        SparePart expensive = new SparePart("SKU002", "Амортизатор", 5, 2500.00, "Sachs");
 
-        AutoPart result = metrics.calculate(List.of(cheap, expensive))
+        SparePart result = metrics.calculate(List.of(cheap, expensive))
                 .mostExpensivePart();
 
         assertNotNull(result);
@@ -59,10 +59,10 @@ class TaskMetricsTest {
 
     @Test
     void shouldCalculateTotalInventoryValue() {
-        List<AutoPart> tasks = List.of(
-                new AutoPart("SKU001", "Колодки", 10, 100.00, "Bosch"),
-                new AutoPart("SKU002", "Фільтр", 5, 200.00, "Mann"),
-                new AutoPart("SKU003", "Дорогий", 1, 999.99, "Test")
+        List<SparePart> tasks = List.of(
+                new SparePart("SKU001", "Колодки", 10, 100.00, "Bosch"),
+                new SparePart("SKU002", "Фільтр", 5, 200.00, "Mann"),
+                new SparePart("SKU003", "Дорогий", 1, 999.99, "Test")
         );
 
         assertEquals(
@@ -74,12 +74,12 @@ class TaskMetricsTest {
 
     @Test
     void zeroStockAndZeroPriceAreHandled() {
-        List<AutoPart> tasks = List.of(
-                new AutoPart("SKU001", "Без ціни", 0, 0.0, "Test"),
-                new AutoPart("SKU002", "Без залишку", 10, 0.0, "Test")
+        List<SparePart> tasks = List.of(
+                new SparePart("SKU001", "Без ціни", 0, 0.0, "Test"),
+                new SparePart("SKU002", "Без залишку", 10, 0.0, "Test")
         );
 
-        InventoryMetrics result = metrics.calculate(tasks);
+        StockValue result = metrics.calculate(tasks);
 
         assertEquals(2, result.validRecords());
         assertEquals(10, result.totalStock());
@@ -89,11 +89,11 @@ class TaskMetricsTest {
 
     @Test
     void inventoryMetricsRecordExposesImmutableSummary() {
-        AutoPart part = new AutoPart(
+        SparePart part = new SparePart(
                 "SKU001", "Колодка", 3, 100.00, "Bosch"
         );
-        InventoryMetrics first = new InventoryMetrics(1, 3, 300.00, part);
-        InventoryMetrics second = new InventoryMetrics(1, 3, 300.00, part);
+        StockValue first = new StockValue(1, 3, 300.00, part);
+        StockValue second = new StockValue(1, 3, 300.00, part);
 
         assertEquals(1, first.validRecords());
         assertEquals(3, first.totalStock());

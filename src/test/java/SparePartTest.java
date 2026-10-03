@@ -3,11 +3,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-class AutoPartTest {
+class SparePartTest {
 
     @Test
     void validTaskTrimsTextValues() {
-        AutoPart task = new AutoPart(
+        SparePart task = new SparePart(
                 " SKU001 ",
                 " Колодки ",
                 10,
@@ -26,7 +26,7 @@ class AutoPartTest {
     void emptyRequiredFieldIsRejectedDuringConstruction() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new AutoPart("", "Колодки", 10, 100.00, "Bosch")
+                () -> new SparePart("", "Колодки", 10, 100.00, "Bosch")
         );
     }
 
@@ -34,7 +34,7 @@ class AutoPartTest {
     void negativeStockIsRejectedDuringConstruction() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new AutoPart("SKU001", "Колодки", -1, 100.00, "Bosch")
+                () -> new SparePart("SKU001", "Колодки", -1, 100.00, "Bosch")
         );
     }
 
@@ -42,13 +42,13 @@ class AutoPartTest {
     void invalidPriceIsRejectedDuringConstruction() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new AutoPart("SKU001", "Колодки", 10, Double.NaN, "Bosch")
+                () -> new SparePart("SKU001", "Колодки", 10, Double.NaN, "Bosch")
         );
     }
 
     @Test
     void fromCsvCreatesValidPart() {
-        AutoPart part = AutoPart.fromCsv(
+        SparePart part = SparePart.fromCsv(
                 " SKU001 ; Колодки ; 10 ; 850.5 ; Bosch "
         );
 
@@ -63,7 +63,7 @@ class AutoPartTest {
     void fromCsvRejectsWrongFieldCount() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> AutoPart.fromCsv("SKU001;Колодки;10;850.50")
+                () -> SparePart.fromCsv("SKU001;Колодки;10;850.50")
         );
     }
 
@@ -71,13 +71,13 @@ class AutoPartTest {
     void fromCsvRejectsInvalidNumber() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> AutoPart.fromCsv("SKU001;Колодки;abc;850.50;Bosch")
+                () -> SparePart.fromCsv("SKU001;Колодки;abc;850.50;Bosch")
         );
     }
 
     @Test
     void toStringUsesCsvFormatAndTwoFractionDigits() {
-        AutoPart part = new AutoPart(
+        SparePart part = new SparePart(
                 "SKU001", "Колодки", 10, 850.5, "Bosch"
         );
 
