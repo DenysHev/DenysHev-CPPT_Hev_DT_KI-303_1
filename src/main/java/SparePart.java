@@ -121,22 +121,47 @@ public final class SparePart {
         );
     }
 
+    /**
+     * Повертає артикул автозапчастини.
+     *
+     * @return артикул
+     */
     public String sku() {
         return sku;
     }
 
+    /**
+     * Повертає назву автозапчастини.
+     *
+     * @return назва деталі
+     */
     public String name() {
         return name;
     }
 
+    /**
+     * Повертає кількість автозапчастин на складі.
+     *
+     * @return кількість деталей
+     */
     public int stock() {
         return stock;
     }
 
+    /**
+     * Повертає ціну однієї автозапчастини.
+     *
+     * @return ціна деталі
+     */
     public double unitPrice() {
         return unitPrice;
     }
 
+    /**
+     * Повертає назву постачальника автозапчастини.
+     *
+     * @return постачальник
+     */
     public String supplier() {
         return supplier;
     }

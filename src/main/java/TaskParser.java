@@ -13,6 +13,12 @@ public class TaskParser {
     private final List<String> errors = new ArrayList<>();
 
     /**
+     * Створює парсер даних автозапчастин.
+     */
+    public TaskParser() {
+    }
+
+    /**
      * Читає автозапчастини з CSV-файлу.
      *
      * @param inputPath шлях до вхідного файлу

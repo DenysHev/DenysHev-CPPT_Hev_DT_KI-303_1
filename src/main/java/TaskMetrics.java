@@ -6,6 +6,12 @@ import java.util.List;
 public class TaskMetrics {
 
     /**
+     * Створює об'єкт для розрахунку показників складу.
+     */
+    public TaskMetrics() {
+    }
+
+    /**
      * Обчислює показники складу.
      *
      * @param tasks список автозапчастин
