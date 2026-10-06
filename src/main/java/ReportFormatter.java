@@ -9,6 +9,12 @@ public class ReportFormatter {
     private static final String NL = System.lineSeparator();
 
     /**
+     * Створює форматер звітів про склад.
+     */
+    public ReportFormatter() {
+    }
+
+    /**
      * Формує звіт.
      *
      * @param tasksCount кількість коректних записів
