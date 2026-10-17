@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!--
+        SparePart is intentionally abstract. Its protected validating
+        constructor must reject invalid domain objects; SpotBugs reports this
+        as a finalizer attack although concrete parts are final.
+    -->
+    <Match>
+        <Class name="SparePart"/>
+        <Bug code="CT"/>
+    </Match>
+</FindBugsFilter>

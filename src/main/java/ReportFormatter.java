@@ -30,6 +30,29 @@ public class ReportFormatter {
             double totalInventoryValue,
             SparePart mostExpensivePart,
             List<String> errors) {
+        return format(
+                tasksCount, totalStock, totalInventoryValue,
+                mostExpensivePart, 0.0, errors);
+    }
+
+    /**
+     * Формує звіт із поліморфно обчисленою гарантійною вартістю.
+     *
+     * @param tasksCount кількість коректних записів
+     * @param totalStock загальна кількість
+     * @param totalInventoryValue вартість запасу
+     * @param mostExpensivePart найдорожча деталь
+     * @param warrantyCost гарантійна вартість
+     * @param errors помилки вхідних даних
+     * @return текст звіту
+     */
+    public String format(
+            int tasksCount,
+            int totalStock,
+            double totalInventoryValue,
+            SparePart mostExpensivePart,
+            double warrantyCost,
+            List<String> errors) {
 
         String expensivePart;
 
@@ -53,10 +76,12 @@ public class ReportFormatter {
                         + "Коректних записів: %d%n"
                         + "Загальна кількість: %d%n"
                         + "Вартість запасу: %.2f%n"
+                        + "Гарантійна вартість: %.2f%n"
                         + "Найдорожча деталь: %s%n",
                 tasksCount,
                 totalStock,
                 totalInventoryValue,
+                warrantyCost,
                 expensivePart
         ));
 
