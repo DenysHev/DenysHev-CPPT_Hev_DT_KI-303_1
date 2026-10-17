@@ -11,7 +11,7 @@ import java.util.List;
  */
 public final class Main {
 
-    private static final String VERSION = "2.0.0";
+    private static final String VERSION = "3.0.0";
 
     private Main() {
     }
@@ -78,6 +78,7 @@ public final class Main {
                     inventoryMetrics.totalStock(),
                     inventoryMetrics.totalInventoryValue(),
                     inventoryMetrics.mostExpensivePart(),
+                    metrics.calculateWarrantyCost(tasks),
                     parser.getErrors()
             );
 

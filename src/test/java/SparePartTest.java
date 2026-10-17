@@ -7,7 +7,7 @@ class SparePartTest {
 
     @Test
     void validTaskTrimsTextValues() {
-        SparePart task = new SparePart(
+        SparePart task = new OriginalPart(
                 " SKU001 ",
                 " Колодки ",
                 10,
@@ -26,7 +26,7 @@ class SparePartTest {
     void emptyRequiredFieldIsRejectedDuringConstruction() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new SparePart("", "Колодки", 10, 100.00, "Bosch")
+                () -> new OriginalPart("", "Колодки", 10, 100.00, "Bosch")
         );
     }
 
@@ -34,7 +34,7 @@ class SparePartTest {
     void negativeStockIsRejectedDuringConstruction() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new SparePart("SKU001", "Колодки", -1, 100.00, "Bosch")
+                () -> new OriginalPart("SKU001", "Колодки", -1, 100.00, "Bosch")
         );
     }
 
@@ -42,7 +42,7 @@ class SparePartTest {
     void invalidPriceIsRejectedDuringConstruction() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new SparePart("SKU001", "Колодки", 10, Double.NaN, "Bosch")
+                () -> new OriginalPart("SKU001", "Колодки", 10, Double.NaN, "Bosch")
         );
     }
 
@@ -77,7 +77,7 @@ class SparePartTest {
 
     @Test
     void toStringUsesCsvFormatAndTwoFractionDigits() {
-        SparePart part = new SparePart(
+        SparePart part = new OriginalPart(
                 "SKU001", "Колодки", 10, 850.5, "Bosch"
         );
 

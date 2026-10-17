@@ -22,7 +22,7 @@ class TaskMetricsTest {
 
     @Test
     void singleTask() {
-        SparePart t = new SparePart("SKU001", "Колодка", 3, 100.00, "Bosch");
+        SparePart t = new OriginalPart("SKU001", "Колодка", 3, 100.00, "Bosch");
         List<SparePart> tasks = List.of(t);
 
         StockValue result = metrics.calculate(tasks);
@@ -36,23 +36,23 @@ class TaskMetricsTest {
     @Test
     void shouldCalculateTotalStock() {
         List<SparePart> tasks = List.of(
-                new SparePart("SKU001", "Колодки", 10, 850.50, "Bosch"),
-                new SparePart("SKU002", "Фільтр", 20, 320.00, "Mann"),
-                new SparePart("SKU003", "Амортизатор", 5, 2450.00, "Sachs")
+                new OriginalPart("SKU001", "Колодки", 10, 850.50, "Bosch"),
+                new ReplacementPart("REP-002", "Фільтр", 20, 320.00, "Mann"),
+                new OriginalPart("SKU003", "Амортизатор", 5, 2450.00, "Sachs")
         );
         assertEquals(35, metrics.calculate(tasks).totalStock());
     }
 
     @Test
     void shouldFindMostExpensivePart() {
-        SparePart cheap = new SparePart("SKU001", "Колодки", 10, 100.00, "Bosch");
-        SparePart expensive = new SparePart("SKU002", "Амортизатор", 5, 2500.00, "Sachs");
+        SparePart cheap = new OriginalPart("SKU001", "Колодки", 10, 100.00, "Bosch");
+        SparePart expensive = new ReplacementPart("REP-002", "Амортизатор", 5, 2500.00, "Sachs");
 
         SparePart result = metrics.calculate(List.of(cheap, expensive))
                 .mostExpensivePart();
 
         assertNotNull(result);
-        assertEquals("SKU002", result.sku());
+        assertEquals("REP-002", result.sku());
         assertEquals("Амортизатор", result.name());
         assertEquals(2500.00, result.unitPrice(), 0.001);
     }
@@ -60,9 +60,9 @@ class TaskMetricsTest {
     @Test
     void shouldCalculateTotalInventoryValue() {
         List<SparePart> tasks = List.of(
-                new SparePart("SKU001", "Колодки", 10, 100.00, "Bosch"),
-                new SparePart("SKU002", "Фільтр", 5, 200.00, "Mann"),
-                new SparePart("SKU003", "Дорогий", 1, 999.99, "Test")
+                new OriginalPart("SKU001", "Колодки", 10, 100.00, "Bosch"),
+                new ReplacementPart("REP-002", "Фільтр", 5, 200.00, "Mann"),
+                new OriginalPart("SKU003", "Дорогий", 1, 999.99, "Test")
         );
 
         assertEquals(
@@ -75,8 +75,8 @@ class TaskMetricsTest {
     @Test
     void zeroStockAndZeroPriceAreHandled() {
         List<SparePart> tasks = List.of(
-                new SparePart("SKU001", "Без ціни", 0, 0.0, "Test"),
-                new SparePart("SKU002", "Без залишку", 10, 0.0, "Test")
+                new OriginalPart("SKU001", "Без ціни", 0, 0.0, "Test"),
+                new ReplacementPart("REP-002", "Без залишку", 10, 0.0, "Test")
         );
 
         StockValue result = metrics.calculate(tasks);
@@ -89,7 +89,7 @@ class TaskMetricsTest {
 
     @Test
     void inventoryMetricsRecordExposesImmutableSummary() {
-        SparePart part = new SparePart(
+        SparePart part = new OriginalPart(
                 "SKU001", "Колодка", 3, 100.00, "Bosch"
         );
         StockValue first = new StockValue(1, 3, 300.00, part);

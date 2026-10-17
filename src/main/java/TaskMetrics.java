@@ -35,4 +35,16 @@ public class TaskMetrics {
                 mostExpensivePart
         );
     }
+
+    /**
+     * Обчислює сумарну гарантійну вартість поліморфно.
+     *
+     * @param parts різнорідні деталі через спільний тип
+     * @return сума гарантійних вартостей
+     */
+    public double calculateWarrantyCost(List<SparePart> parts) {
+        return parts.stream()
+                .mapToDouble(SparePart::warrantyCost)
+                .sum();
+    }
 }
