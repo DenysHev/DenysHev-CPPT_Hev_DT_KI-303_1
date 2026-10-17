@@ -101,7 +101,34 @@ Maven використовує Java 21, JUnit 5, SpotBugs і Shade Plugin. Workf
 | Сумісність ЛР2 | усі попередні 37 тестів |
 | Інфраструктура | `mvn clean verify`, CI matrix |
 
-Посилання на конкретні Issue/PR додаються після публікації роботи в GitHub.
+Пов'язані GitHub Issues:
+
+- [#23 — Реалізувати equals і hashCode для деталей](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/23)
+- [#24 — Додати тести поліморфної моделі](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/24)
+- [#25 — Розширити модель складу автозапчастин](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/25)
+- [#26 — Додати PartKind і поліморфну гарантійну вартість](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/26)
+- [#27 — Налаштувати CI, JAR і релізну перевірку](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/27)
+- [#28 — Оновити звіт, README та документацію](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/28)
+
+Пов'язаний Pull Request:
+
+- [#29 — [Lab 3] Розширити модель складу автозапчастин](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/pull/29)
+
+Результати GitHub Actions для commit `7d67afa`:
+
+- [Ubuntu — verify](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/39044990072/job/117431827644)
+- [Windows — verify](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/39044990072/job/117431827619)
+- [macOS — verify](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/runs/39044990072/job/117431827374)
+
+Опубліковані JAR-артефакти:
+
+- [jar-ubuntu-latest-40](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/artifacts/12105128633)
+- [jar-windows-latest-40](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/artifacts/12104863689)
+- [jar-macos-latest-40](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/actions/artifacts/12105800660)
+
+Релізний тег:
+
+- [v3.0.0](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/releases/tag/v3.0.0)
 
 ## 12. Порівняння поведінки
 
