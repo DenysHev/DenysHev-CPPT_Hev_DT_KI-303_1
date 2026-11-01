@@ -11,7 +11,9 @@ import java.util.List;
  */
 public final class Main {
 
-    private static final String VERSION = "3.0.0";
+    private static final String VERSION = "4.0.0";
+    private static final int LOW_STOCK_THRESHOLD = 10;
+    private static final int TOP_LIMIT = 5;
 
     private Main() {
     }
@@ -69,6 +71,7 @@ public final class Main {
             TaskParser parser = new TaskParser();
             TaskMetrics metrics = new TaskMetrics();
             ReportFormatter formatter = new ReportFormatter();
+            InventoryStreamQueries queries = new InventoryStreamQueries();
 
             List<SparePart> tasks = parser.readTasks(input);
             StockValue inventoryMetrics = metrics.calculate(tasks);
@@ -80,6 +83,16 @@ public final class Main {
                     inventoryMetrics.mostExpensivePart(),
                     metrics.calculateWarrantyCost(tasks),
                     parser.getErrors()
+            );
+            report += formatter.formatStreamQueries(
+                    LOW_STOCK_THRESHOLD,
+                    queries.filterLowStock(tasks, LOW_STOCK_THRESHOLD),
+                    queries.mapSkus(tasks),
+                    queries.inventoryValueBySupplier(tasks),
+                    queries.priceStatistics(tasks),
+                    queries.topByPrice(tasks, TOP_LIMIT),
+                    queries.findBySku(tasks, "SKU001"),
+                    queries.findBySku(tasks, "ABSENT")
             );
 
             System.out.println(report);
