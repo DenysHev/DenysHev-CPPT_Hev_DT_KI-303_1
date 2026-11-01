@@ -1,6 +1,10 @@
 # Maven build directory
 target/
 
+# Local input and generated reports
+data/
+out/
+
 # Compiled class files
 *.class
 

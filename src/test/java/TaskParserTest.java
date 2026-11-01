@@ -36,6 +36,21 @@ class TaskParserTest {
         assertEquals("Фільтр", tasks.get(1).name());
     }
 
+    @Test
+    void readsControlFixtureFromTestResources() throws Exception {
+        var resource = getClass().getClassLoader()
+                .getResource("input.csv");
+
+        assertTrue(resource != null, "контрольний fixture має існувати");
+
+        TaskParser parser = new TaskParser();
+        List<SparePart> tasks = parser.readTasks(Path.of(resource.toURI()));
+
+        assertEquals(6, tasks.size());
+        assertEquals(1, parser.getErrors().size(),
+                "некоректний запис fixture має бути відхилений");
+    }
+
     @ParameterizedTest
     @CsvSource(delimiter = '|', value = {
         // рядок                                          | valid | reason

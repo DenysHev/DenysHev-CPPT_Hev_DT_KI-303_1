@@ -1,5 +1,8 @@
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.DoubleSummaryStatistics;
 
 /**
  * Формує текстовий звіт про склад автозапчастин.
@@ -103,5 +106,68 @@ public class ReportFormatter {
         }
 
         return report.toString();
+    }
+
+    /**
+     * Формує секцію звіту для потокових запитів ЛР4.
+     *
+     * @param threshold поріг залишку
+     * @param lowStock деталі з залишком нижче порогу
+     * @param skus артикули всіх деталей
+     * @param valueBySupplier вартість запасу за виробником
+     * @param priceStatistics статистика цін
+     * @param topParts найдорожчі деталі
+     * @param found знайдена деталь
+     * @param missing результат пошуку відсутнього артикулу
+     * @return текст секції
+     */
+    public String formatStreamQueries(
+            int threshold,
+            List<SparePart> lowStock,
+            List<String> skus,
+            Map<String, Double> valueBySupplier,
+            DoubleSummaryStatistics priceStatistics,
+            List<SparePart> topParts,
+            Optional<SparePart> found,
+            Optional<SparePart> missing) {
+        String lowStockSkus = lowStock.stream()
+                .map(SparePart::sku)
+                .collect(java.util.stream.Collectors.joining(", "));
+        String top = topParts.stream()
+                .map(part -> String.format(
+                        Locale.ROOT, "%s (%.2f)", part.name(), part.unitPrice()))
+                .collect(java.util.stream.Collectors.joining(", "));
+        double minimum = priceStatistics.getCount() == 0
+                ? 0.0 : priceStatistics.getMin();
+        double maximum = priceStatistics.getCount() == 0
+                ? 0.0 : priceStatistics.getMax();
+        double average = priceStatistics.getCount() == 0
+                ? 0.0 : priceStatistics.getAverage();
+
+        return String.format(
+                Locale.ROOT,
+                "%nПОТОКОВІ ЗАПИТИ ЛР4%n"
+                        + "----------------------------------------%n"
+                        + "Залишок нижче %d: [%s]%n"
+                        + "Артикули: %s%n"
+                        + "Вартість запасу за виробником: %s%n"
+                        + "Статистика цін: кількість=%d, сума=%.2f, "
+                        + "середнє=%.2f, мінімум=%.2f, максимум=%.2f%n"
+                        + "Top-%d за ціною: [%s]%n"
+                        + "Пошук SKU-001: %s%n"
+                        + "Пошук ABSENT: %s%n",
+                threshold,
+                lowStockSkus,
+                skus,
+                valueBySupplier,
+                priceStatistics.getCount(),
+                priceStatistics.getSum(),
+                average,
+                minimum,
+                maximum,
+                topParts.size(),
+                top,
+                found.map(SparePart::name).orElse("не знайдено"),
+                missing.isPresent() ? "знайдено" : "не знайдено");
     }
 }

@@ -1,40 +1,27 @@
-# Лабораторна робота №3
+# Лабораторна робота №4
 
 ## Склад автозапчастин, варіант 4
 
-Проєкт демонструє поліморфну модель складу автозапчастин на Java 21.
-Формат даних сумісний із лабораторною роботою №2:
+Проєкт демонструє потокову обробку даних складу автозапчастин на Java 21.
+Модель і CSV-контракт попередніх робіт збережені:
 
 ```text
 sku;name;stock;unitPrice;supplier
 ```
 
-### Модель
+### Stream API-запити
 
-`SparePart` — абстрактний базовий клас зі спільними полями та інваріантами.
-Конкретні підтипи:
+`InventoryStreamQueries` містить п'ять незалежних конвеєрів:
 
-- `OriginalPart` — оригінальна деталь, гарантійна вартість становить 20%
-  вартості її запасу;
-- `ReplacementPart` — замінна деталь, гарантійна вартість становить 10%.
+1. `filterLowStock` — відбір деталей із залишком нижче порогу 10;
+2. `mapSkus` — перетворення деталей на список артикулів;
+3. `inventoryValueBySupplier` — групування вартості запасу за виробником;
+4. `priceStatistics` — `DoubleSummaryStatistics` для цін;
+5. `topByPrice` — top-N за ціною спаданням і назвою зростанням.
 
-`PartKind` містить категорії `ORIGINAL` і `REPLACEMENT`. У CSV старі артикули
-`SKU-...` вважаються оригінальними, а `REP-...` і `REPL-...` — замінними.
-Завдяки цьому старий формат із п'яти полів не змінюється.
-
-Поліморфна операція `warrantyCost()` викликається через спільний тип
-`SparePart`; центрального `if` або `switch` за підтипом немає.
-
-### Показники звіту
-
-Зберігаються всі показники ЛР2:
-
-1. кількість коректних записів;
-2. загальна кількість деталей;
-3. вартість запасу;
-4. найдорожча деталь.
-
-Додатково звіт показує сумарну гарантійну вартість.
+`findBySku` виконує безпечний пошук через `Optional`. Для дубльованого
+артикулу повертається перший запис у початковому порядку. Від'ємне N
+відхиляється, нуль повертає порожній список, а завелике N повертає всі записи.
 
 ### Збірка, тести та запуск
 
@@ -42,11 +29,13 @@ sku;name;stock;unitPrice;supplier
 ./mvnw -B clean verify
 ./mvnw -B package
 ./mvnw -B test
-java -jar target/cppt-labs.jar --input data/input.csv
-java -jar target/cppt-labs.jar --input data/input.csv --output out/report.txt
+java -jar target/cppt-labs.jar --input src/test/resources/input.csv
+java -jar target/cppt-labs.jar --input src/test/resources/input.csv --output /tmp/report.txt
 java -jar target/cppt-labs.jar --help
 java -jar target/cppt-labs.jar --version
 ```
 
-`verify` запускає JUnit і SpotBugs. GitHub Actions виконує перевірку на
-Ubuntu, Windows і macOS та публікує JAR як артефакт.
+`verify` запускає JUnit і SpotBugs. CI перевіряє Maven-проєкт на Ubuntu,
+Windows і macOS. Контрольний CSV для тестів зберігається в
+`src/test/resources/input.csv`; кореневі вхідні та вихідні тестові файли
+до репозиторію не додаються.
