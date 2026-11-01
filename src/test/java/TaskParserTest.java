@@ -37,14 +37,14 @@ class TaskParserTest {
     }
 
     @Test
-    void readsControlFixtureFromTestResources() throws IOException {
+    void readsControlFixtureFromTestResources() throws Exception {
         var resource = getClass().getClassLoader()
                 .getResource("input.csv");
 
         assertTrue(resource != null, "контрольний fixture має існувати");
 
         TaskParser parser = new TaskParser();
-        List<SparePart> tasks = parser.readTasks(Path.of(resource.getPath()));
+        List<SparePart> tasks = parser.readTasks(Path.of(resource.toURI()));
 
         assertEquals(6, tasks.size());
         assertEquals(1, parser.getErrors().size(),
