@@ -164,24 +164,28 @@ Windows і macOS та публікує JAR як artifact після успішн
 використовується тестами. Вхідні та згенеровані вихідні файли з кореневих
 каталогів `data/` і `out/` до репозиторію не додаються.
 
-На момент підготовки цього звіту зміни ЛР4 ще не опубліковані в окремому
-Pull Request, тому посилання на зелений віддалений запуск, artifact і тег
-`v4.0.0` ще не можуть бути наведені як фактичні результати.
+Зміни опубліковані в Pull Request
+[#36](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/pull/36).
+Успішний запуск GitHub Actions №41327965880 перевірив Ubuntu, Windows і
+macOS; кожна платформа також опублікувала JAR artifact.
 
 ## 12. GitHub Issues і Pull Request
 
 У попередній роботі історія була оформлена Issues #23–#28 і Pull Request #29.
-Для цієї роботи окремі Issues і Pull Request ще не створені. Тому відповідна
-таблиця має бути заповнена після публікації змін:
+Для цієї роботи створено Issues #32–#35 і Pull Request #36:
 
 | Issue | Зміна | Перевірка |
 |---|---|---|
-| буде додано | реалізація п'яти Stream-запитів | `InventoryStreamQueriesTest` |
-| буде додано | Optional-пошук і крайові випадки | тести `findBySku` та `topByPrice` |
-| буде додано | документація і звіт | перевірка `REPORT.md`, `README.md` |
-| буде додано | CI та JAR | `clean verify`, workflow на 3 ОС |
+| [#32](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/32) | п'ять Stream-запитів | `InventoryStreamQueriesTest` |
+| [#33](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/33) | Optional-пошук і крайові випадки | тести `findBySku` та `topByPrice` |
+| [#34](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/34) | контрольний fixture у test resources | `TaskParserTest` |
+| [#35](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/35) | документація, версія та CI | `clean verify`, workflow на 3 ОС |
 
-Вигадані номери або посилання навмисно не наведено.
+Pull Request [#36](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/pull/36)
+містить опис змін, команди локальної перевірки, зв'язки `Closes #32`–`#35`
+і зелені результати CI.
+Версію проєкту оновлено до `4.0.0`; після фінальної зеленої перевірки цьому
+стану відповідає Git-тег `v4.0.0`.
 
 ## 13. Порівняння циклової та потокової реалізацій
 
