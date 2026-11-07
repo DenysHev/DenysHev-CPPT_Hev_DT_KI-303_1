@@ -1,8 +1,10 @@
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Головний клас програми.
@@ -11,7 +13,6 @@ import java.util.List;
  */
 public final class Main {
 
-    private static final String VERSION = "4.0.0";
     private static final int LOW_STOCK_THRESHOLD = 10;
     private static final int TOP_LIMIT = 5;
 
@@ -35,7 +36,7 @@ public final class Main {
                 }
 
                 case "--version" -> {
-                    System.out.println(VERSION);
+                    System.out.println(applicationVersion());
                     return;
                 }
 
@@ -132,5 +133,32 @@ public final class Main {
                 --input <файл>      шлях до вхідного CSV-файлу
                 --output <файл>     шлях до файлу звіту
                 """);
+    }
+
+    /**
+     * Reads the application version generated from the Maven project version.
+     *
+     * @return application version
+     */
+    private static String applicationVersion() {
+        Properties properties = new Properties();
+        try (InputStream stream = Main.class.getClassLoader()
+                .getResourceAsStream("build-info.properties")) {
+            if (stream == null) {
+                throw new IllegalStateException(
+                        "Не знайдено build-info.properties");
+            }
+            properties.load(stream);
+        } catch (IOException exception) {
+            throw new IllegalStateException(
+                    "Не вдалося прочитати версію застосунку", exception);
+        }
+
+        String version = properties.getProperty("application.version");
+        if (version == null || version.isBlank()) {
+            throw new IllegalStateException(
+                    "Версія застосунку відсутня у build-info.properties");
+        }
+        return version;
     }
 }

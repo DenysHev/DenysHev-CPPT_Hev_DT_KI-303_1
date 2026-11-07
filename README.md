@@ -35,6 +35,9 @@ java -jar target/cppt-labs.jar --help
 java -jar target/cppt-labs.jar --version
 ```
 
+Версія задається єдиним значенням у `pom.xml`; команда `--version` читає
+значення, підставлене Maven під час збирання JAR.
+
 `verify` запускає JUnit і SpotBugs. CI перевіряє Maven-проєкт на Ubuntu,
 Windows і macOS. Контрольний CSV для тестів зберігається в
 `src/test/resources/input.csv`; кореневі вхідні та вихідні тестові файли
