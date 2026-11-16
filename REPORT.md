@@ -22,7 +22,7 @@
 
 - `Repository<T>` для типобезпечного зберігання;
 - `SparePartRecord` для CSV-представлення варіанта 4;
-- `CsvColumn` для опису назв стовпців;
+- `CsvColumn` для опису назв стовпців одним елементом `String value()`;
 - `CsvExporter` для універсального експорту та імпорту;
 - `DataStorageException` для помилок збереження, формату та reflection;
 - позитивні, граничні й негативні тести.
@@ -79,7 +79,7 @@ A-1,Bosch,"Фільтр, ""преміум""
 1. знаходить анотовані поля класу та його суперкласів;
 2. сортує їх за іменами Java-полів;
 3. отримує назви стовпців з `@CsvColumn`;
-4. читає значення приватних полів через reflection;
+4. перевіряє `trySetAccessible()` і читає значення приватних полів через reflection;
 5. формує заголовок і рядки CSV;
 6. читає CSV parser-ом станів та передає поля предметному parser-у.
 
@@ -142,7 +142,7 @@ sku;name;stock;unitPrice;supplier
 - відсутній файл і збереження `cause`.
 
 Збережено всі попередні тести. Команда `./mvnw -B test` проходить:
-**59 тестів, 0 помилок, 0 пропущених тестів**.
+**60 тестів, 0 помилок, 0 пропущених тестів**.
 
 Round-trip має вигляд:
 
@@ -170,12 +170,16 @@ java -jar target/cppt-labs.jar --version
 `.github/workflows/ci.yml` налаштований на Ubuntu, Windows і macOS та
 публікує JAR як artifact після успішної перевірки.
 
-Коміти й push у межах цієї роботи не виконувалися.
+Попередній Pull Request уже об'єднано в `main`; для поточних виправлень
+підготовлено майбутній Pull Request, який має містити оновлення анотації,
+`trySetAccessible()` та додаткові тести.
 
 ## 11. GitHub Issues і Pull Request
 
-Для лабораторної створено п'ять Issue у форматі `[Lab 6]`. Pull Request ще
-не створювався.
+Для лабораторної створено п'ять Issue у форматі `[Lab 6]`. Майбутній
+Pull Request очікується як
+[PR #44](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/pull/44).
+Посилання є прогнозованим placeholder і стане дійсним після створення PR.
 
 | Issue | Зміна | Перевірка |
 |---|---|---|
@@ -185,8 +189,9 @@ java -jar target/cppt-labs.jar --version
 | [#41](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/41) | `CsvColumn` і рефлексивний експортер | `CsvExporterTest` |
 | [#42](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/42) | `Repository<T>` | `RepositoryTest` |
 
-Версію проєкту оновлено до `5.0.0`; Git-тег для цієї роботи ще не
-створювався.
+Версію проєкту оновлено до `5.0.0`. Після merge створено тег
+[v5.0.0](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/releases/tag/v5.0.0),
+який вказує на фінальний стан `main`.
 
 ## 12. Порівняння підходів
 

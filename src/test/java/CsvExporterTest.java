@@ -75,11 +75,29 @@ class CsvExporterTest {
             assertEquals(List.of(), exporter.read(
                     file, SparePartRecord.class, SparePartRecord::fromCsvFields));
 
-            Files.writeString(file, "артикул,назва\n");
+            Files.writeString(
+                    file,
+                    "артикул,виробник,назва,ціна,кількість\n"
+                            + "A-1,Bosch,Фільтр,125.50\n");
             assertThrows(DataStorageException.class, () -> exporter.read(
                     file, SparePartRecord.class, SparePartRecord::fromCsvFields));
         } finally {
             Files.deleteIfExists(file);
         }
+    }
+
+    @Test
+    void reportsMissingFileAsStorageException() {
+        Path missing = Path.of("target", "missing-parts.csv");
+
+        DataStorageException exception = assertThrows(
+                DataStorageException.class,
+                () -> exporter.read(
+                        missing,
+                        SparePartRecord.class,
+                        SparePartRecord::fromCsvFields));
+
+        assertTrue(exception.getMessage().contains("прочитати CSV"));
+        assertTrue(exception.getCause() instanceof java.io.IOException);
     }
 }
