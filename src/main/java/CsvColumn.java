@@ -15,12 +15,5 @@ public @interface CsvColumn {
      *
      * @return назва CSV-стовпця
      */
-    String value() default "";
-
-    /**
-     * Альтернативне іменоване написання назви стовпця.
-     *
-     * @return назва CSV-стовпця
-     */
-    String name() default "";
+    String value();
 }

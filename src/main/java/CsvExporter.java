@@ -141,10 +141,7 @@ public final class CsvExporter {
     }
 
     private String columnName(Field field) {
-        CsvColumn annotation = field.getAnnotation(CsvColumn.class);
-        return annotation.value().isBlank()
-                ? annotation.name()
-                : annotation.value();
+        return field.getAnnotation(CsvColumn.class).value();
     }
 
     private <T> String row(List<Field> fields, T record)
@@ -163,7 +160,10 @@ public final class CsvExporter {
 
     private String value(Field field, Object record) {
         try {
-            field.setAccessible(true);
+            if (!field.trySetAccessible()) {
+                throw new IllegalStateException(
+                        "Немає доступу до поля " + field.getName());
+            }
             Object value = field.get(record);
             return value == null ? "" : value.toString();
         } catch (ReflectiveOperationException | SecurityException exception) {
