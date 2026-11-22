@@ -16,6 +16,15 @@
   анотованими полями;
 - `DataStorageException` — checked exception, який зберігає `cause`.
 
+### Два CSV-контракти
+
+- `src/test/resources/input.csv` — попередній контрольний semicolon-CSV для
+  `TaskParser`, метрик, поліморфної моделі та Stream API;
+- `data/input.csv` — новий comma-CSV із заголовком і записами
+  `SparePartRecord` для `CsvExporter` та `Repository<T>`;
+- створений у `out/parts.csv` новий CSV є нормалізованим експортом тих самих
+  записів і може бути прочитаний назад через round-trip.
+
 Поля CSV впорядковуються за іменем Java-поля. Для `SparePartRecord` заголовок:
 
 ```text
@@ -49,6 +58,7 @@
 ./mvnw -B test
 java -jar target/cppt-labs.jar --input src/test/resources/input.csv
 java -jar target/cppt-labs.jar --input src/test/resources/input.csv --output /tmp/report.txt
+java -jar target/cppt-labs.jar --input data/input.csv --csv-output out/parts.csv
 java -jar target/cppt-labs.jar --help
 java -jar target/cppt-labs.jar --version
 ```
