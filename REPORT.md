@@ -129,6 +129,12 @@ sku;name;stock;unitPrice;supplier
 Нове плоске представлення `SparePartRecord` не змінює цей попередній
 контракт.
 
+У основній програмі реалізовано розгалуження форматів. Новий comma-CSV
+читається через `CsvExporter` і попадає у `Repository<SparePartRecord>`.
+Попередній semicolon-CSV читається через `TaskParser`. Для обох форматів
+коректні записи нормалізуються у `SparePartRecord` та можуть бути збережені
+через `CsvExporter` шляхом `--csv-output`.
+
 ## 9. Тестування
 
 Додано `RepositoryTest` і `CsvExporterTest`. Вони перевіряють:
@@ -139,10 +145,11 @@ sku;name;stock;unitPrice;supplier
 - round-trip для `SparePartRecord`;
 - порожній CSV із заголовком;
 - неправильний заголовок, кількість полів і число;
-- відсутній файл і збереження `cause`.
+- відсутній файл і збереження `cause`;
+- некоректні лапки та текст після закритого лапками поля.
 
 Збережено всі попередні тести. Команда `./mvnw -B test` проходить:
-**60 тестів, 0 помилок, 0 пропущених тестів**.
+**61 тест, 0 помилок, 0 пропущених тестів**.
 
 Round-trip має вигляд:
 
@@ -166,7 +173,7 @@ java -jar target/cppt-labs.jar --version
 ```
 
 `clean verify` проходить зі SpotBugs без помилок. Виконуваний JAR створюється,
-а `--version` повертає `5.0.0`. Workflow
+а `--version` повертає `5.0.1`. Workflow
 `.github/workflows/ci.yml` налаштований на Ubuntu, Windows і macOS та
 публікує JAR як artifact після успішної перевірки.
 
@@ -189,9 +196,9 @@ Pull Request очікується як
 | [#41](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/41) | `CsvColumn` і рефлексивний експортер | `CsvExporterTest` |
 | [#42](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/issues/42) | `Repository<T>` | `RepositoryTest` |
 
-Версію проєкту оновлено до `5.0.0`. Після merge створено тег
-[v5.0.0](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/releases/tag/v5.0.0),
-який вказує на фінальний стан `main`.
+Версію проєкту оновлено до `5.0.1`. Після merge буде створено тег
+[v5.0.1](https://github.com/DenysHev/DenysHev-CPPT_Hev_DT_KI-303_1/releases/tag/v5.0.1),
+який вказує на фінальний стан виправленої версії на `main`.
 
 ## 12. Порівняння підходів
 

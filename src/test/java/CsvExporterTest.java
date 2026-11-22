@@ -100,4 +100,26 @@ class CsvExporterTest {
         assertTrue(exception.getMessage().contains("прочитати CSV"));
         assertTrue(exception.getCause() instanceof java.io.IOException);
     }
+
+    @Test
+    void rejectsTextAfterClosingQuoteAndUnquotedInnerQuote() throws Exception {
+        Path file = Files.createTempFile("parts-quote-", ".csv");
+        try {
+            Files.writeString(
+                    file,
+                    "артикул,виробник,назва,ціна,кількість\n"
+                            + "A-1,Bosch,\"Фільтр\"text,125.50,4\n");
+            assertThrows(DataStorageException.class, () -> exporter.read(
+                    file, SparePartRecord.class, SparePartRecord::fromCsvFields));
+
+            Files.writeString(
+                    file,
+                    "артикул,виробник,назва,ціна,кількість\n"
+                            + "A-1,Bosch,Фі\"льтр,125.50,4\n");
+            assertThrows(DataStorageException.class, () -> exporter.read(
+                    file, SparePartRecord.class, SparePartRecord::fromCsvFields));
+        } finally {
+            Files.deleteIfExists(file);
+        }
+    }
 }
