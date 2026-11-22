@@ -101,6 +101,15 @@ public final class CsvExporter {
         }
         List<T> result = new ArrayList<>();
         for (int i = 1; i < rows.size(); i++) {
+            if (rows.get(i).size() != expectedHeader.size()) {
+                throw new DataStorageException(
+                        "Неправильна кількість полів у CSV-рядку "
+                                + (i + 1)
+                                + ": очікувалося "
+                                + expectedHeader.size()
+                                + ", отримано "
+                                + rows.get(i).size());
+            }
             try {
                 result.add(Objects.requireNonNull(parser.apply(rows.get(i))));
             } catch (RuntimeException exception) {
@@ -186,41 +195,93 @@ public final class CsvExporter {
         List<List<String>> rows = new ArrayList<>();
         List<String> row = new ArrayList<>();
         StringBuilder field = new StringBuilder();
-        boolean quoted = false;
+        int state = 0; // 0=start, 1=unquoted, 2=quoted, 3=after_quote
+        if (text.startsWith("\uFEFF")) {
+            text = text.substring(1);
+        }
         for (int i = 0; i < text.length(); i++) {
             char current = text.charAt(i);
-            if (quoted) {
+            if (state == 2) {
                 if (current == '"') {
                     if (i + 1 < text.length() && text.charAt(i + 1) == '"') {
                         field.append('"');
                         i++;
                     } else {
-                        quoted = false;
+                        state = 3;
+                    }
+                } else {
+                    if (current == '\r') {
+                        field.append('\n');
+                        if (i + 1 < text.length() && text.charAt(i + 1) == '\n') {
+                            i++;
+                        }
+                    } else {
+                        field.append(current);
+                    }
+                }
+            } else if (state == 3) {
+                if (current == ',') {
+                    row.add(field.toString());
+                    field.setLength(0);
+                    state = 0;
+                } else if (current == '\n' || current == '\r') {
+                    row.add(field.toString());
+                    rows.add(List.copyOf(row));
+                    row = new ArrayList<>();
+                    field.setLength(0);
+                    state = 0;
+                    if (current == '\r' && i + 1 < text.length()
+                            && text.charAt(i + 1) == '\n') {
+                        i++;
+                    }
+                } else {
+                    throw new DataStorageException(
+                            "Некоректний символ після закриття CSV-поля");
+                }
+            } else if (state == 0) {
+                if (current == '"') {
+                    state = 2;
+                } else if (current == ',') {
+                    row.add("");
+                } else if (current == '\n' || current == '\r') {
+                    row.add("");
+                    rows.add(List.copyOf(row));
+                    row = new ArrayList<>();
+                    if (current == '\r' && i + 1 < text.length()
+                            && text.charAt(i + 1) == '\n') {
+                        i++;
+                    }
+                } else {
+                    field.append(current);
+                    state = 1;
+                }
+            } else if (state == 1) {
+                if (current == '"') {
+                    throw new DataStorageException(
+                            "Лапка всередині незаповненого лапками поля");
+                } else if (current == ',') {
+                    row.add(field.toString());
+                    field.setLength(0);
+                    state = 0;
+                } else if (current == '\n' || current == '\r') {
+                    row.add(field.toString());
+                    rows.add(List.copyOf(row));
+                    row = new ArrayList<>();
+                    field.setLength(0);
+                    state = 0;
+                    if (current == '\r' && i + 1 < text.length()
+                            && text.charAt(i + 1) == '\n') {
+                        i++;
                     }
                 } else {
                     field.append(current);
                 }
-            } else if (current == '"') {
-                if (field.length() != 0) {
-                    throw new DataStorageException("Некоректне CSV-екранування");
-                }
-                quoted = true;
-            } else if (current == ',') {
-                row.add(field.toString());
-                field.setLength(0);
-            } else if (current == '\n') {
-                row.add(field.toString());
-                rows.add(List.copyOf(row));
-                row.clear();
-                field.setLength(0);
-            } else if (current != '\r') {
-                field.append(current);
             }
         }
-        if (quoted) {
+        if (state == 2) {
             throw new DataStorageException("Незакриті лапки у CSV");
         }
-        if (field.length() != 0 || !row.isEmpty()) {
+        if (state == 3 || state == 1 || field.length() != 0 || !row.isEmpty()) {
             row.add(field.toString());
             rows.add(List.copyOf(row));
         }
